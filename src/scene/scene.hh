@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <set>
 
 #include "camera.hh"
 #include "image.hh"
@@ -22,7 +23,7 @@ namespace scene
     void render(image::Image& image) const;
     color3::Color3 shade(cast_ray_result& surface, const vector3::Vector3& dir, int depth) const;
     cast_ray_result cast_ray(const vector3::Vector3& origin,
-                             const vector3::Vector3& direction) const;
+                             const vector3::Vector3& direction, std::set<object::Object*> blacklist) const;
 
   private:
     std::vector<object::Object*> objects_;

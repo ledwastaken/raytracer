@@ -24,7 +24,7 @@ namespace scene
         for (int i = 0; i < width; i++)
           {
             auto direction = camera_.compute_direction(i, j, width, height);
-            auto result = cast_ray(camera_.center_get(), direction);
+            auto result = cast_ray(camera_.center_get(), direction, {});
 
             if (result.first)
               image.color_pixel(shade(result, direction, 0), i, j);
@@ -48,9 +48,9 @@ namespace scene
         float ns = 50;
 
         if (depth < 1) {
-          auto result = cast_ray(point + normal * 0.5f, reflected_dir);
+          auto result = cast_ray(point, reflected_dir, {object});
 
-          if (result.first && result.first != object)
+          if (result.first)
             pixel_color = pixel_color + shade(result, reflected_dir, depth + 1);
         }
 
@@ -64,13 +64,16 @@ namespace scene
   }
 
   cast_ray_result Scene::cast_ray(const vector3::Vector3& origin,
-                                  const vector3::Vector3& direction) const
+                                  const vector3::Vector3& direction, std::set<object::Object*> blacklist) const
   {
     object::Object* object = nullptr;
     vector3::Vector3 point = vector3::Vector3::infinity();
 
     for (auto obj : objects_)
       {
+        if (blacklist.contains(obj))
+          continue;
+
         const vector3::Vector3& intersection =
           obj->intersect(origin, direction);
 
