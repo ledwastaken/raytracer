@@ -22,14 +22,15 @@ using namespace vector3;
 int main(void)
 {
   Camera camera(Vector3(0, 0, 0), Vector3::x_axis(), Vector3::y_axis(), 70);
-  Image image(256, 256);
+  Image image(512, 512);
 
   TextureMaterial* texture = new UniformTexture(1.0f, 1.0f);
 
-  Sphere redSphere = Sphere(texture, Color3::from_rgb(70, 200, 70), Vector3(10, 0, 0), 4);
-  PointLight pointLight = PointLight(Color3::from_rgb(80, 80, 80), Vector3(200, 100, -50));
+  Sphere greySphere = Sphere(texture, Color3::from_rgb(100, 100, 100), Vector3(5, 0, -1.5f), 1);
+  Sphere redSphere = Sphere(texture, Color3::from_rgb(200, 70, 70), Vector3(5, 0, 1.5f), 1);
+  PointLight pointLight = PointLight(Color3::from_rgb(80, 80, 80), Vector3(-20, 10, 0));
 
-  std::vector<Object*> objects{&redSphere};
+  std::vector<Object*> objects{&greySphere, &redSphere};
   std::vector<Light*> lights{&pointLight};
 
   Scene scene(objects, lights, camera);

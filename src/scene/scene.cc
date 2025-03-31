@@ -27,12 +27,12 @@ namespace scene
             auto result = cast_ray(camera_.center_get(), direction);
 
             if (result.first)
-              image.color_pixel(shade(result, direction), i, j);
+              image.color_pixel(shade(result, direction, 0), i, j);
           }
       }
   }
 
-  color3::Color3 Scene::shade(cast_ray_result& surface, vector3::Vector3& dir) const
+  color3::Color3 Scene::shade(cast_ray_result& surface, const vector3::Vector3& dir, int depth) const
   {
     const float ambient_intensity = 0.15f;
     auto [object, point] = surface;
@@ -46,6 +46,13 @@ namespace scene
         auto reflected_dir = dir - normal * 2 * dir.dot(normal);
         float diffuse_factor = std::max(0.0f, normal.dot(light_dir)) * diffuse;
         float ns = 50;
+
+        if (depth < 1) {
+          auto result = cast_ray(point + normal * 0.5f, reflected_dir);
+
+          if (result.first && result.first != object)
+            pixel_color = pixel_color + shade(result, reflected_dir, depth + 1);
+        }
 
         color3::Color3 Id = object->color_get() * light_source->color_get() * diffuse_factor;
         color3::Color3 Is = light_source->color_get() * std::pow(reflected_dir.dot(-light_dir), ns) * specular;

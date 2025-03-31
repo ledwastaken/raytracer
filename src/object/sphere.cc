@@ -30,10 +30,12 @@ namespace object
         float t1 = (-b + std::sqrt(delta)) / (2 * a);
         float t2 = (-b - std::sqrt(delta)) / (2 * a);
 
-        if (t1 > 0)
+        if (t1 > 0 && t1 < t2)
           return origin + direction * t1;
-        else
+        else if (t2 > 0)
           return origin + direction * t2;
+        else
+          return vector3::Vector3::infinity();
       }
   }
 
