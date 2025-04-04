@@ -21,16 +21,28 @@ using namespace vector3;
 
 int main(void)
 {
-  Camera camera(Vector3(0, 0, 0), Vector3::x_axis(), Vector3::y_axis(), 70);
+  Camera camera(Vector3(0, 1, 0), Vector3(1, 1, 0), Vector3::y_axis(), 70);
   Image image(512, 512);
 
-  TextureMaterial* texture = new UniformTexture(1.0f, 1.0f);
+  struct TextureParams reflectiveTextureParams;
+  reflectiveTextureParams.diffuse = 1.0f;
+  reflectiveTextureParams.specular = 1.0f;
+  reflectiveTextureParams.reflectance = 1.0f;
 
-  Sphere greySphere = Sphere(texture, Color3::from_rgb(100, 100, 100), Vector3(5, 0, -1.5f), 1);
-  Sphere redSphere = Sphere(texture, Color3::from_rgb(200, 70, 70), Vector3(5, 0, 1.5f), 1);
+  struct TextureParams nonReflectiveTextureParams;
+  nonReflectiveTextureParams.diffuse = 1.0f;
+  nonReflectiveTextureParams.specular = 1.0f;
+  nonReflectiveTextureParams.reflectance = 0.0f;
+
+  TextureMaterial* reflectiveTexture = new UniformTexture(&reflectiveTextureParams);
+  TextureMaterial* nonReflectiveTexture = new UniformTexture(&nonReflectiveTextureParams);
+
+  Sphere redSphere = Sphere(nonReflectiveTexture, Color3::from_rgb(200, 70, 70), Vector3(5, 1, -1.5f), 1);
+  Sphere floor = Sphere(reflectiveTexture, Color3::from_rgb(200, 200, 200), Vector3(5, -1000, 0), 1000);
+
   PointLight pointLight = PointLight(Color3::from_rgb(80, 80, 80), Vector3(-20, 10, 0));
 
-  std::vector<Object*> objects{&greySphere, &redSphere};
+  std::vector<Object*> objects{&redSphere, &floor};
   std::vector<Light*> lights{&pointLight};
 
   Scene scene(objects, lights, camera);

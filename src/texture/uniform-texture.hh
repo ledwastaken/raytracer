@@ -7,12 +7,11 @@ namespace texture
   class UniformTexture : public TextureMaterial
   {
   public:
-    UniformTexture(float diffuse, float specular);
+    UniformTexture(struct TextureParams* textureParams);
 
-    std::tuple<float, float> render(const vector3::Vector3& point) const override;
+    const struct TextureParams* render(const vector3::Vector3& point) const override;
 
   private:
-    float diffuse_;
-    float specular_;
+    struct TextureParams* textureParams_;
   };
 } // namespace texture

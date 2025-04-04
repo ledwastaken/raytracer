@@ -44,7 +44,7 @@ namespace object
     return (point - center_).normalize();
   }
 
-  std::tuple<float, float> Sphere::render(const vector3::Vector3& point) const
+  const struct texture::TextureParams* Sphere::render(const vector3::Vector3& point) const
   {
     return texture_->render(point);
   }

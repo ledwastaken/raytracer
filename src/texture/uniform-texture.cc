@@ -2,14 +2,13 @@
 
 namespace texture
 {
-  UniformTexture::UniformTexture(float diffuse, float specular)
-    : diffuse_(diffuse)
-    , specular_(specular)
+  UniformTexture::UniformTexture(struct TextureParams* textureParams)
+    : textureParams_(textureParams)
   {}
 
-  std::tuple<float, float>
+  const struct TextureParams*
   UniformTexture::render(const vector3::Vector3& point) const
   {
-    return std::make_tuple(diffuse_, specular_);
+    return textureParams_;
   }
 } // namespace texture

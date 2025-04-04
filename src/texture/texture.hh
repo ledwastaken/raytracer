@@ -4,11 +4,18 @@
 
 namespace texture
 {
+  struct TextureParams
+  {
+    float diffuse;
+    float specular;
+    float reflectance;
+  };
+
   class TextureMaterial
   {
   public:
     TextureMaterial();
 
-    virtual std::tuple<float, float> render(const vector3::Vector3& point) const = 0;
+    virtual const struct TextureParams* render(const vector3::Vector3& point) const = 0;
   };
 } // namespace texture

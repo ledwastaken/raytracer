@@ -19,7 +19,7 @@ namespace object
               const vector3::Vector3& direction) const = 0;
     virtual const vector3::Vector3
     normal(const vector3::Vector3& point) const = 0;
-    virtual std::tuple<float, float>
+    virtual const struct texture::TextureParams*
     render(const vector3::Vector3& point) const = 0;
 
   protected:

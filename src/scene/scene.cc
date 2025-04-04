@@ -37,7 +37,10 @@ namespace scene
     const float ambient_intensity = 0.15f;
     auto [object, point] = surface;
     auto pixel_color = object->color_get() * ambient_intensity;
-    auto [diffuse, specular] = object->render(point);
+    auto textureParams = object->render(point);
+    auto diffuse = textureParams->diffuse;
+    auto specular = textureParams->specular;
+    auto reflectance = textureParams->reflectance;
 
     for (light::Light* light_source : lights_)
       {
@@ -51,7 +54,7 @@ namespace scene
           auto result = cast_ray(point, reflected_dir, {object});
 
           if (result.first)
-            pixel_color = pixel_color + shade(result, reflected_dir, depth + 1);
+            pixel_color = pixel_color + shade(result, reflected_dir, depth + 1) * reflectance;
         }
 
         color3::Color3 Id = object->color_get() * light_source->color_get() * diffuse_factor;
