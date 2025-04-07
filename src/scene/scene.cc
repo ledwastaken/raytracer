@@ -50,7 +50,18 @@ namespace scene
         float diffuse_factor = std::max(0.0f, normal.dot(light_dir)) * diffuse;
         float ns = 50;
 
-        if (depth < 1) {
+        auto point_light = dynamic_cast<light::PointLight*>(light_source);
+
+        if (point_light)
+        {
+          auto origin = point_light->origin_get();
+          auto shadow = cast_ray(point, (origin - point).normalize(), {object});
+
+          if (shadow.first && (shadow.second - point).magnitude() < (origin - point).magnitude())
+            return pixel_color;
+        }
+
+        if (depth < 2) {
           auto result = cast_ray(point, reflected_dir, {object});
 
           if (result.first)

@@ -6,6 +6,7 @@
 #include "image.hh"
 #include "point-light.hh"
 #include "scene.hh"
+#include "plane.hh"
 #include "sphere.hh"
 #include "uniform-texture.hh"
 #include "vector3.hh"
@@ -21,28 +22,39 @@ using namespace vector3;
 
 int main(void)
 {
-  Camera camera(Vector3(0, 1, 0), Vector3(1, 1, 0), Vector3::y_axis(), 70);
+  Camera camera(Vector3(-100, 50, -100), Vector3(1, -0.5f, 1), Vector3(0.5f, 1, 0.5f), 70);
   Image image(512, 512);
 
-  struct TextureParams reflectiveTextureParams;
-  reflectiveTextureParams.diffuse = 1.0f;
-  reflectiveTextureParams.specular = 1.0f;
-  reflectiveTextureParams.reflectance = 1.0f;
+  struct TextureParams textureParams1;
+  textureParams1.diffuse = 1.0f;
+  textureParams1.specular = 0.0f;
+  textureParams1.reflectance = 0.7f;
 
-  struct TextureParams nonReflectiveTextureParams;
-  nonReflectiveTextureParams.diffuse = 1.0f;
-  nonReflectiveTextureParams.specular = 1.0f;
-  nonReflectiveTextureParams.reflectance = 0.0f;
+  struct TextureParams textureParams2;
+  textureParams2.diffuse = 1.0f;
+  textureParams2.specular = 0.5f;
+  textureParams2.reflectance = 0.0f;
 
-  TextureMaterial* reflectiveTexture = new UniformTexture(&reflectiveTextureParams);
-  TextureMaterial* nonReflectiveTexture = new UniformTexture(&nonReflectiveTextureParams);
+  struct TextureParams textureParams3;
+  textureParams3.diffuse = 1.0f;
+  textureParams3.specular = 0.0f;
+  textureParams3.reflectance = 0.0f;
 
-  Sphere redSphere = Sphere(nonReflectiveTexture, Color3::from_rgb(200, 70, 70), Vector3(5, 1, -1.5f), 1);
-  Sphere floor = Sphere(reflectiveTexture, Color3::from_rgb(200, 200, 200), Vector3(5, -1000, 0), 1000);
+  TextureMaterial* texture1 = new UniformTexture(&textureParams1);
+  TextureMaterial* texture2 = new UniformTexture(&textureParams2);
+  TextureMaterial* texture3 = new UniformTexture(&textureParams3);
 
-  PointLight pointLight = PointLight(Color3::from_rgb(80, 80, 80), Vector3(-20, 10, 0));
+  Sphere redSphere = Sphere(texture2, Color3::from_rgb(200, 70, 70), Vector3(-50, 10, -60), 10);
+  Sphere blueSphere = Sphere(texture2, Color3::from_rgb(70, 70, 200), Vector3(-80, 15, -50), 15);
 
-  std::vector<Object*> objects{&redSphere, &floor};
+  Plane miror = Plane(texture1, Color3::from_rgb(50, 50, 50), Vector3(0, 0, 0), -Vector3::x_axis());
+  Plane hiddenMiror = Plane(texture3, Color3::from_rgb(50, 50, 50), Vector3(-100, 0, 0), Vector3::x_axis());
+  Plane wall = Plane(texture3, Color3::from_rgb(50, 50, 50), Vector3(0, 0, 0), -Vector3::z_axis());
+  Plane floor = Plane(texture3, Color3::from_rgb(200, 200, 200), Vector3(0, 0, 0), Vector3::y_axis());
+
+  PointLight pointLight = PointLight(Color3::from_rgb(200, 200, 200), Vector3(-50, 50, -50));
+
+  std::vector<Object*> objects{&redSphere, &blueSphere, &miror, &wall, &floor, &hiddenMiror};
   std::vector<Light*> lights{&pointLight};
 
   Scene scene(objects, lights, camera);
