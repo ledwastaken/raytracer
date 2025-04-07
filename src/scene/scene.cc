@@ -48,7 +48,7 @@ namespace scene
         auto normal = object->normal(point);
         auto reflected_dir = dir - normal * 2 * dir.dot(normal);
         float diffuse_factor = std::max(0.0f, normal.dot(light_dir)) * diffuse;
-        float ns = 50;
+        float ns = 51;
 
         auto point_light = dynamic_cast<light::PointLight*>(light_source);
 
@@ -69,7 +69,7 @@ namespace scene
         }
 
         color3::Color3 Id = object->color_get() * light_source->color_get() * diffuse_factor;
-        color3::Color3 Is = light_source->color_get() * std::pow(reflected_dir.dot(-light_dir), ns) * specular;
+        color3::Color3 Is = light_source->color_get() * std::pow(reflected_dir.dot(light_dir), ns) * specular;
 
         pixel_color = pixel_color + Id + Is;
       }
