@@ -52,6 +52,13 @@ namespace scene
 
         auto point_light = dynamic_cast<light::PointLight*>(light_source);
 
+        if (depth < 2) {
+          auto result = cast_ray(point, reflected_dir, {object});
+
+          if (result.first)
+            pixel_color = pixel_color + shade(result, reflected_dir, depth + 1) * reflectance;
+        }
+
         if (point_light)
         {
           auto origin = point_light->origin_get();
@@ -59,13 +66,6 @@ namespace scene
 
           if (shadow.first && (shadow.second - point).magnitude() < (origin - point).magnitude())
             return pixel_color;
-        }
-
-        if (depth < 2) {
-          auto result = cast_ray(point, reflected_dir, {object});
-
-          if (result.first)
-            pixel_color = pixel_color + shade(result, reflected_dir, depth + 1) * reflectance;
         }
 
         color3::Color3 Id = object->color_get() * light_source->color_get() * diffuse_factor;

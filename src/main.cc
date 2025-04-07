@@ -50,7 +50,7 @@ int main(void)
   Plane miror = Plane(texture1, Color3::from_rgb(50, 50, 50), Vector3(0, 0, 0), -Vector3::x_axis());
   Plane hiddenMiror = Plane(texture3, Color3::from_rgb(50, 50, 50), Vector3(-100, 0, 0), Vector3::x_axis());
   Plane wall = Plane(texture3, Color3::from_rgb(50, 50, 50), Vector3(0, 0, 0), -Vector3::z_axis());
-  Plane floor = Plane(texture3, Color3::from_rgb(200, 200, 200), Vector3(0, 0, 0), Vector3::y_axis());
+  Plane floor = Plane(texture1, Color3::from_rgb(200, 200, 200), Vector3(0, 0, 0), Vector3::y_axis());
 
   PointLight pointLight = PointLight(Color3::from_rgb(200, 200, 200), Vector3(-50, 50, -50));
 
